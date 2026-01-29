@@ -37,13 +37,23 @@ for emp in employees:
         template_content
     )
     
-    # Replace Title (matches line 25)
-    # We look for the div containing "CPO & Co-founder"
+    # Replace Title (matches line 24-25)
     new_content = re.sub(
         r'(<div[^>]*style="[^"]*font-size: 11px;[^"]*">)\s*CPO & Co-founder\s*(</div>)',
+        # We need to escape any special chars in title if they exist, but here it's safe
         r'\1' + title + r'\2',
         new_content
     )
+
+    # Replace Phone Numbers
+    if name != "Sean Muir":
+        # Remove the first phone number and the "|" separator
+        # Target: <a href="tel:5142406484" ...>514 240 6484</a> |
+        new_content = re.sub(
+            r'<a href="tel:5142406484"[^>]*>514 240 6484</a>\s*\|\s*',
+            '',
+            new_content
+        )
     
     output_path = os.path.join('/Users/seanmuir/Code/EmailSignatures', filename)
     with open(output_path, 'w') as f:
