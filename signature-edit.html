@@ -203,8 +203,10 @@
 <body>
 
     <div class="preview-container">
-        <div id="signature-preview" class="signature-card">
-            <!-- Template will be injected here -->
+        <div class="signature-card">
+            <div id="signature-preview">
+                <!-- Template will be injected here -->
+            </div>
         </div>
 
         <div style="width: 100%; max-width: 600px;">
@@ -419,9 +421,9 @@
         async function copySignature() {
             const el = document.getElementById('signature-preview');
 
-            // Create a temporary range to select the content
+            // Create a temporary range to select the content children (ignoring the wrapper)
             const range = document.createRange();
-            range.selectNode(el);
+            range.selectNodeContents(el);
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
 
