@@ -1,17 +1,18 @@
-# Happly Team Email Signatures
+## 🎨 Interactive Signature Editor
 
-This repository contains the official email signatures for the Happly team. 
+The easiest way to create your signature is to use our new **Live Editor**:
 
-## 🚀 How to use your signature
+👉 **[Launch Happly Signature Editor](https://seanhapplyai.github.io/EmailSignatures/signature-edit.html)**
 
-1. Find your name in the list below.
-2. Click the link to open your personal signature page.
-3. Once the page is open, press **Cmd+A** (Select All) and then **Cmd+C** (Copy).
-4. Go to your email client's settings (Gmail, Outlook, etc.).
-5. **Paste (Cmd+V)** the signature into the signature box.
-6. Save changes.
+1. Open the link above.
+2. Enter your name, title, and contact details in the panel on the right.
+3. Click **"Copy for Email"**.
+4. Paste it directly into your email client settings.
 
-## 📋 Signature Links
+---
+
+## 🚀 Pre-Generated Signatures (Direct Links)
+If you prefer not to use the editor, you can access your pre-generated signature below:
 
 | Name | Link |
 | :--- | :--- |
