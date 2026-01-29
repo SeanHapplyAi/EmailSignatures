@@ -47,10 +47,10 @@ for emp in employees:
 
     # Replace Phone Numbers
     if name != "Sean Muir":
-        # Remove the first phone number and the "|" separator
-        # Target: <a href="tel:5142406484" ...>514 240 6484</a> |
+        # Remove the second phone number and the "|" separator
+        # Target: | <a href="tel:+330767392131" ...>+33 07 67 39 21 31</a>
         new_content = re.sub(
-            r'<a href="tel:5142406484"[^>]*>514 240 6484</a>\s*\|\s*',
+            r'\s*\|\s*<a href="tel:\+330767392131"[^>]*>\+33 07 67 39 21 31</a>',
             '',
             new_content
         )
