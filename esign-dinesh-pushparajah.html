@@ -3,7 +3,52 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
     <title>Email Signature</title>
+    <style>
+        /* Dark Mode Support */
+        :root {
+            color-scheme: light dark;
+            supported-color-schemes: light dark;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .dark-text {
+                color: #FFFFFF !important;
+            }
+
+            .muted-text {
+                color: #99A0AE !important;
+            }
+
+            .link-text {
+                color: #A48AFB !important;
+            }
+
+            .divider {
+                background-color: #333741 !important;
+            }
+        }
+
+        /* Outlook-specific Dark Mode */
+        [data-ogsc] .dark-text {
+            color: #FFFFFF !important;
+        }
+
+        [data-ogsc] .muted-text {
+            color: #99A0AE !important;
+        }
+
+        [data-ogsc] .link-text {
+            color: #A48AFB !important;
+        }
+
+        [data-ogsc] .divider {
+            background-color: #333741 !important;
+        }
+    </style>
 </head>
 
 <body style="margin: 0; padding: 0;">
@@ -17,9 +62,9 @@
             </td>
             <!-- Name, Title, and Socials -->
             <td style="vertical-align: middle; white-space: nowrap;">
-                <div
+                <div class="dark-text"
                     style="font-family: 'Inter', Arial, sans-serif; font-size: 12px; font-weight: 500; color: #000000; margin-bottom: 2px; line-height: 1.2; white-space: nowrap;">Dinesh Pushparajah</div>
-                <div
+                <div class="muted-text"
                     style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; font-weight: 400; color: #99A0AE; margin-bottom: 8px; line-height: 1.2; white-space: nowrap;">Co-Founder // CTO</div>
 
                 <!-- Social Media Icons (Updated to 15x15) -->
@@ -44,7 +89,8 @@
             </td>
             <!-- Vertical Separator -->
             <td style="padding-left: 24px; padding-right: 24px; vertical-align: middle;">
-                <div style="width: 1px; height: 60px; background-color: #E2E4E9; padding: 0;">&nbsp;</div>
+                <div class="divider" style="width: 1px; height: 60px; background-color: #E2E4E9; padding: 0;">&nbsp;
+                </div>
             </td>
             <!-- Contact Info -->
             <td style="vertical-align: middle;">
@@ -52,19 +98,19 @@
                     <tr>
                         <td style="padding-right: 8px;"><img src="assets/website.png" alt="Web" width="15" height="15"
                                 style="display: block; width: 15px; height: 15px;"></td>
-                        <td><a href="https://www.happly.ai"
+                        <td><a href="https://www.happly.ai" class="link-text"
                                 style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #7F56D9; text-decoration: none; font-weight: 500;">www.happly.ai</a>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding-right: 8px;"><img src="assets/phone.png" alt="Phone" width="15" height="15"
                                 style="display: block; width: 15px; height: 15px;"></td>
-                        <td
+                        <td class="muted-text"
                             style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866; white-space: nowrap;">
-                            <a href="tel:+12134816747"
+                            <a href="tel:+12134816747" class="muted-text"
                                 style="color: #525866; text-decoration: none; white-space: nowrap;">+1 213 481 6747</a>
                             |
-                            <a href="tel:+330767392131"
+                            <a href="tel:+330767392131" class="muted-text"
                                 style="color: #525866; text-decoration: none; white-space: nowrap;">+33 07 67 39 21
                                 31</a>
                         </td>
@@ -72,7 +118,8 @@
                     <tr>
                         <td style="padding-right: 8px;"><img src="assets/location.png" alt="Loc" width="15" height="15"
                                 style="display: block; width: 15px; height: 15px;"></td>
-                        <td style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866;">Montreal |
+                        <td class="muted-text"
+                            style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866;">Montreal |
                             Paris | New York</td>
                     </tr>
                 </table>
@@ -84,13 +131,13 @@
     <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
         <tr>
             <td style="vertical-align: top; padding-right: 48px;">
-                <div
+                <div class="muted-text"
                     style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">
                     Incubated At</div>
             </td>
             <td style="vertical-align: top;">
-                <div
-                    style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">
+                <div class="muted-text"
+                    style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; white-space: nowrap;">
                     Accelerated At</div>
             </td>
         </tr>
@@ -124,7 +171,7 @@
         <tr>
             <!-- Partners Column -->
             <td style="vertical-align: top; padding-right: 23px;">
-                <div
+                <div class="muted-text"
                     style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">
                     Partners</div>
                 <table cellpadding="0" cellspacing="0" border="0">
@@ -143,7 +190,7 @@
             </td>
             <!-- Awards Column -->
             <td style="vertical-align: top; white-space: nowrap;">
-                <div
+                <div class="muted-text"
                     style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; white-space: nowrap;">
                     Awards</div>
                 <table cellpadding="0" cellspacing="0" border="0">

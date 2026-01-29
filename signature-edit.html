@@ -268,6 +268,21 @@
         // Use the absolute URLs for assets since this editor might be used from different paths
         const ASSET_BASE = "https://seanhapplyai.github.io/EmailSignatures/assets/";
 
+        const DARK_MODE_STYLES = `
+<style>
+    @media (prefers-color-scheme: dark) {
+        .dark-text { color: #FFFFFF !important; }
+        .muted-text { color: #99A0AE !important; }
+        .link-text { color: #A48AFB !important; }
+        .divider { background-color: #333741 !important; }
+    }
+    [data-ogsc] .dark-text { color: #FFFFFF !important; }
+    [data-ogsc] .muted-text { color: #99A0AE !important; }
+    [data-ogsc] .link-text { color: #A48AFB !important; }
+    [data-ogsc] .divider { background-color: #333741 !important; }
+</style>
+        `.trim();
+
         const TEMPLATE = `
             <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
                 <tr>
@@ -275,8 +290,8 @@
                         <img src="${ASSET_BASE}happly-logo.png" alt="H" width="50" height="56" style="display: block; border: 0; width: 50px; height: 56px;">
                     </td>
                     <td style="vertical-align: middle; white-space: nowrap;">
-                        <div id="prev-name" style="font-family: 'Inter', Arial, sans-serif; font-size: 12px; font-weight: 500; color: #000000; margin-bottom: 2px; line-height: 1.2; white-space: nowrap;">Sean Anthony Muir</div>
-                        <div id="prev-title" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; font-weight: 400; color: #99A0AE; margin-bottom: 8px; line-height: 1.2; white-space: nowrap;">CPO & Co-founder</div>
+                        <div id="prev-name" class="dark-text" style="font-family: 'Inter', Arial, sans-serif; font-size: 12px; font-weight: 500; color: #000000; margin-bottom: 2px; line-height: 1.2; white-space: nowrap;">Sean Anthony Muir</div>
+                        <div id="prev-title" class="muted-text" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; font-weight: 400; color: #99A0AE; margin-bottom: 8px; line-height: 1.2; white-space: nowrap;">CPO & Co-founder</div>
                         <table cellpadding="0" cellspacing="0" border="0">
                             <tr>
                                 <td style="padding-right: 12px;">
@@ -292,24 +307,24 @@
                         </table>
                     </td>
                     <td style="padding-left: 24px; padding-right: 24px; vertical-align: middle;">
-                        <div style="width: 1px; height: 60px; background-color: #E2E4E9; padding: 0;">&nbsp;</div>
+                        <div class="divider" style="width: 1px; height: 60px; background-color: #E2E4E9; padding: 0;">&nbsp;</div>
                     </td>
                     <td style="vertical-align: middle;">
                         <table cellpadding="0" cellspacing="4" border="0">
                             <tr>
                                 <td style="padding-right: 8px;"><img src="${ASSET_BASE}website.png" alt="Web" width="15" height="15" style="display: block; width: 15px; height: 15px;"></td>
-                                <td style="white-space: nowrap;"><a href="https://www.happly.ai" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #7F56D9; text-decoration: none; font-weight: 500; white-space: nowrap;">www.happly.ai</a></td>
+                                <td style="white-space: nowrap;"><a href="https://www.happly.ai" class="link-text" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #7F56D9; text-decoration: none; font-weight: 500; white-space: nowrap;">www.happly.ai</a></td>
                             </tr>
                             <tr>
                                 <td style="padding-right: 8px;"><img src="${ASSET_BASE}phone.png" alt="Phone" width="15" height="15" style="display: block; width: 15px; height: 15px;"></td>
-                                <td id="prev-phones" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866; white-space: nowrap;">
-                                    <a id="prev-p1" href="tel:+12134816747" style="color: #525866; text-decoration: none; white-space: nowrap;">+1 213 481 6747</a> <span id="prev-sep">|</span>
-                                    <a id="prev-p2" href="tel:+330767392131" style="color: #525866; text-decoration: none; white-space: nowrap;">+33 07 67 39 21 31</a>
+                                <td id="prev-phones" class="muted-text" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866; white-space: nowrap;">
+                                    <a id="prev-p1" class="muted-text" href="tel:+12134816747" style="color: #525866; text-decoration: none; white-space: nowrap;">+1 213 481 6747</a> <span id="prev-sep">|</span>
+                                    <a id="prev-p2" class="muted-text" href="tel:+330767392131" style="color: #525866; text-decoration: none; white-space: nowrap;">+33 07 67 39 21 31</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding-right: 8px;"><img src="${ASSET_BASE}location.png" alt="Loc" width="15" height="15" style="display: block; width: 15px; height: 15px;"></td>
-                                <td style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866; white-space: nowrap;">Montreal | Paris | New York</td>
+                                <td class="muted-text" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866; white-space: nowrap;">Montreal | Paris | New York</td>
                             </tr>
                         </table>
                     </td>
@@ -421,9 +436,14 @@
         async function copySignature() {
             const el = document.getElementById('signature-preview');
 
+            // Temporary wrapper to include styles for the clipboard
+            const container = document.createElement('div');
+            container.innerHTML = DARK_MODE_STYLES + el.innerHTML;
+            document.body.appendChild(container);
+
             // Create a temporary range to select the content children (ignoring the wrapper)
             const range = document.createRange();
-            range.selectNodeContents(el);
+            range.selectNode(container);
             window.getSelection().removeAllRanges();
             window.getSelection().addRange(range);
 
@@ -435,10 +455,11 @@
             }
 
             window.getSelection().removeAllRanges();
+            document.body.removeChild(container);
         }
 
         function copyHTML() {
-            const html = document.getElementById('signature-preview').innerHTML;
+            const html = DARK_MODE_STYLES + "\n" + document.getElementById('signature-preview').innerHTML;
             navigator.clipboard.writeText(html).then(() => {
                 showToast("HTML source copied!");
             });
