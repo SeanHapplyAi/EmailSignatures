@@ -9,15 +9,7 @@ with open(template_path, 'r') as f:
 employees = [
     {"name": "Thierry Lindor", "title": "Co-Founder // CEO"},
     {"name": "Sean Muir", "title": "Co-Founder // CPO"},
-    {"name": "Dinesh Pushparajah", "title": "Co-Founder // CTO"},
-    {"name": "Anthony Nuoci", "title": "Senior Developer // Partner"},
-    {"name": "Rosie Farokhi", "title": "Senior Product Manager"},
-    {"name": "Yevgeniy Akimenko", "title": "Software Engineer"},
-    {"name": "Amal El Guendouz", "title": "Marketing & Operations Lead"},
-    {"name": "Syranda Raffoul", "title": "Grant & Funding Strategist"},
-    {"name": "Arman Rokni", "title": "Product Designer"},
-    {"name": "Ravitha Loganathan", "title": "Operations Coordinator"},
-    {"name": "Ahmaad Ansari", "title": "Full Stack Engineer"}
+    {"name": "Dinesh Pushparajah", "title": "Co-Founder // CTO"}
 ]
 
 def sanitize_filename(name):
