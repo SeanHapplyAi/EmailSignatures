@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happly | Email Signature Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7F56D9;
+            --primary-light: #F9F5FF;
+            --secondary: #667085;
+            --background: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+            --text-main: #1A1C1E;
+            --text-muted: #64748B;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            background-color: var(--background);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Panel Layout --- */
+        .preview-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background-image:
+                radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .editor-panel {
+            width: 400px;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border);
+            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        /* --- Header --- */
+        header {
+            margin-bottom: 32px;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: var(--text-main);
+        }
+
+        header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* --- Form Group --- */
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            margin: 24px 0 16px 0;
+            border-bottom: 1px solid var(--primary-light);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--secondary);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(127, 86, 217, 0.1);
+        }
+
+        /* --- Preview Area --- */
+        .signature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .actions {
+            margin-top: 32px;
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #6941C6;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(127, 86, 217, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--background);
+        }
+
+        /* --- Mobile Warning --- */
+        @media (max-width: 800px) {
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+
+            .editor-panel {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid var(--border);
+            }
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1A1C1E;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="preview-container">
+        <div id="signature-preview" class="signature-card">
+            <!-- Template will be injected here -->
+        </div>
+
+        <div style="width: 100%; max-width: 600px;">
+            <div class="actions">
+                <button class="btn btn-primary" onclick="copySignature()">Copy for Email</button>
+                <button class="btn btn-secondary" onclick="copyHTML()">Copy Source Code</button>
+            </div>
+            <p style="text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 12px;">
+                Tip: Use "Copy for Email" and paste directly into Gmail or Outlook signature settings.
+            </p>
+        </div>
+    </div>
+
+    <div class="editor-panel">
+        <header>
+            <h1>Signature Editor</h1>
+            <p>Personalize your Happly signature.</p>
+        </header>
+
+        <div class="section-title">Identity</div>
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" value="Sean Anthony Muir" oninput="updateSignature()">
+        </div>
+        <div class="form-group">
+            <label for="title">Job Title</label>
+            <input type="text" id="title" value="CPO & Co-founder" oninput="updateSignature()">
+        </div>
+
+        <div class="section-title">Contact Information</div>
+        <div class="form-group">
+            <label for="phone1">Personal Phone (Optional)</label>
+            <input type="text" id="phone1" value="+1 213 481 6747" oninput="updateSignature()">
+        </div>
+        <div class="form-group">
+            <label for="phone2">Company Phone</label>
+            <input type="text" id="phone2" value="+33 07 67 39 21 31" oninput="updateSignature()">
+        </div>
+
+        <div class="section-title">Social Media Links</div>
+        <div class="form-group">
+            <label for="linkedin">LinkedIn URL</label>
+            <input type="text" id="linkedin" value="https://www.linkedin.com/company/happlyai/"
+                oninput="updateSignature()">
+        </div>
+        <div class="form-group">
+            <label for="instagram">Instagram URL</label>
+            <input type="text" id="instagram" value="https://www.instagram.com/happlyai/" oninput="updateSignature()">
+        </div>
+        <div class="form-group">
+            <label for="x">X (Twitter) URL</label>
+            <input type="text" id="x" value="https://x.com/happlyai" oninput="updateSignature()">
+        </div>
+    </div>
+
+    <div id="toast">Signature copied to clipboard!</div>
+
+    <script>
+        // Use the absolute URLs for assets since this editor might be used from different paths
+        const ASSET_BASE = "https://seanhapplyai.github.io/EmailSignatures/assets/";
+
+        const TEMPLATE = `
+            <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                <tr>
+                    <td style="vertical-align: middle; padding-right: 16px;">
+                        <img src="${ASSET_BASE}happly-logo.png" alt="H" width="50" height="56" style="display: block; border: 0; width: 50px; height: 56px;">
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <div id="prev-name" style="font-family: 'Inter', Arial, sans-serif; font-size: 12px; font-weight: 500; color: #000000; margin-bottom: 2px; line-height: 1.2;">Sean Anthony Muir</div>
+                        <div id="prev-title" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; font-weight: 400; color: #99A0AE; margin-bottom: 8px; line-height: 1.2;">CPO & Co-founder</div>
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding-right: 12px;">
+                                    <a id="prev-linkedin" href="https://www.linkedin.com/company/happlyai/"><img src="${ASSET_BASE}Linkedin.png" alt="LinkedIn" width="15" height="15" style="display: block; border: 0; width: 15px; height: 15px;"></a>
+                                </td>
+                                <td style="padding-right: 12px;">
+                                    <a id="prev-instagram" href="https://www.instagram.com/happlyai/"><img src="${ASSET_BASE}Instagram.png" alt="Instagram" width="15" height="15" style="display: block; border: 0; width: 15px; height: 15px;"></a>
+                                </td>
+                                <td>
+                                    <a id="prev-x" href="https://x.com/happlyai"><img src="${ASSET_BASE}Twitter-X.png" alt="X" width="15" height="15" style="display: block; border: 0; width: 15px; height: 15px;"></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="padding-left: 24px; padding-right: 24px; vertical-align: middle;">
+                        <div style="width: 1px; height: 60px; background-color: #E2E4E9; padding: 0;">&nbsp;</div>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <table cellpadding="0" cellspacing="4" border="0">
+                            <tr>
+                                <td style="padding-right: 8px;"><img src="${ASSET_BASE}website.png" alt="Web" width="15" height="15" style="display: block; width: 15px; height: 15px;"></td>
+                                <td><a href="https://www.happly.ai" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #7F56D9; text-decoration: none; font-weight: 500;">www.happly.ai</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 8px;"><img src="${ASSET_BASE}phone.png" alt="Phone" width="15" height="15" style="display: block; width: 15px; height: 15px;"></td>
+                                <td id="prev-phones" style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866;">
+                                    <a id="prev-p1" href="tel:+12134816747" style="color: #525866; text-decoration: none;">+1 213 481 6747</a> <span id="prev-sep">|</span>
+                                    <a id="prev-p2" href="tel:+330767392131" style="color: #525866; text-decoration: none;">+33 07 67 39 21 31</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-right: 8px;"><img src="${ASSET_BASE}location.png" alt="Loc" width="15" height="15" style="display: block; width: 15px; height: 15px;"></td>
+                                <td style="font-family: 'Inter', Arial, sans-serif; font-size: 11px; color: #525866;">Montreal | Paris | New York</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                <tr>
+                    <td style="vertical-align: top; padding-right: 48px;"><div style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Incubated At</div></td>
+                    <td style="vertical-align: top;"><div style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Accelerated At</div></td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: middle; padding-right: 48px;">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding-right: 16px; vertical-align: middle;"><img src="${ASSET_BASE}nextai.png" alt="Next AI" width="86" height="16" style="display: block; width: 86px; height: 16px;"></td>
+                                <td style="vertical-align: middle;"><img src="${ASSET_BASE}hec.png" alt="HEC" width="32" height="32" style="display: block; width: 32px; height: 32px;"></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="vertical-align: middle;">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding-right: 16px; vertical-align: middle;"><img src="${ASSET_BASE}googleforstartups.png" alt="Google" width="145" height="18" style="display: block; width: 145px; height: 18px;"></td>
+                                <td style="vertical-align: middle;"><img src="${ASSET_BASE}cdl.png" alt="CDL" width="60" height="20" style="display: block; width: 60px; height: 20px;"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+                <tr>
+                    <td style="vertical-align: top; padding-right: 23px;">
+                        <div style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Partners</div>
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding-right: 9px; vertical-align: middle;"><img src="${ASSET_BASE}laval.png" alt="Laval" width="120" height="20" style="display: block; width: 120px; height: 20px;"></td>
+                                <td style="padding-right: 9px; vertical-align: middle;"><img src="${ASSET_BASE}telus.png" alt="TELUS" width="75" height="16" style="display: block; width: 75px; height: 16px;"></td>
+                                <td style="padding-right: 9px; vertical-align: middle;"><img src="${ASSET_BASE}deepmind.png" alt="DeepMind" width="70" height="16" style="display: block; width: 70px; height: 16px;"></td>
+                                <td style="vertical-align: middle;"><img src="${ASSET_BASE}canada.png" alt="Canada" width="55" height="13" style="display: block; width: 55px; height: 13px;"></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <div style="font-family: 'Inter', Arial, sans-serif; font-size: 9px; font-weight: 500; color: #99A0AE; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">Awards</div>
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td style="padding-right: 7px; vertical-align: middle;"><img src="${ASSET_BASE}bmo.png" alt="BMO" width="55" height="19" style="display: block; width: 55px; height: 19px;"></td>
+                                <td style="padding-right: 7px; vertical-align: middle;"><img src="${ASSET_BASE}deloitte.png" alt="Deloitte" width="60" height="13" style="display: block; width: 60px; height: 13px;"></td>
+                                <td style="padding-right: 7px; vertical-align: middle;"><img src="${ASSET_BASE}uoft.png" alt="UofT" width="60" height="21" style="display: block; width: 60px; height: 21px;"></td>
+                                <td style="vertical-align: middle;"><img src="${ASSET_BASE}americanexpress.png" alt="Amex" width="25" height="25" style="display: block; width: 25px; height: 25px;"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        `;
+
+        function init() {
+            document.getElementById('signature-preview').innerHTML = TEMPLATE;
+            updateSignature();
+        }
+
+        function updateSignature() {
+            const name = document.getElementById('name').value;
+            const title = document.getElementById('title').value;
+            const p1 = document.getElementById('phone1').value;
+            const p2 = document.getElementById('phone2').value;
+            const linkedin = document.getElementById('linkedin').value;
+            const instagram = document.getElementById('instagram').value;
+            const x = document.getElementById('x').value;
+
+            // Identity
+            document.getElementById('prev-name').innerText = name;
+            document.getElementById('prev-title').innerText = title;
+
+            // Socials
+            document.getElementById('prev-linkedin').href = linkedin;
+            document.getElementById('prev-instagram').href = instagram;
+            document.getElementById('prev-x').href = x;
+
+            // Phone Logic
+            const phoneCell = document.getElementById('prev-phones');
+            const p1El = document.getElementById('prev-p1');
+            const p2El = document.getElementById('prev-p2');
+            const sep = document.getElementById('prev-sep');
+
+            if (p1.trim() === "") {
+                p1El.style.display = 'none';
+                sep.style.display = 'none';
+            } else {
+                p1El.style.display = 'inline';
+                p1El.innerText = p1;
+                p1El.href = "tel:" + p1.replace(/\s+/g, '');
+                sep.style.display = 'inline';
+            }
+
+            if (p2.trim() === "") {
+                p2El.style.display = 'none';
+                sep.style.display = 'none';
+            } else {
+                p2El.style.display = 'inline';
+                p2El.innerText = p2;
+                p2El.href = "tel:" + p2.replace(/\s+/g, '');
+                // Maintain separator if both exist
+                if (p1.trim() !== "") sep.style.display = 'inline';
+            }
+        }
+
+        async function copySignature() {
+            const el = document.getElementById('signature-preview');
+
+            // Create a temporary range to select the content
+            const range = document.createRange();
+            range.selectNode(el);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+
+            try {
+                document.execCommand('copy');
+                showToast("Signature copied for Email!");
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+
+            window.getSelection().removeAllRanges();
+        }
+
+        function copyHTML() {
+            const html = document.getElementById('signature-preview').innerHTML;
+            navigator.clipboard.writeText(html).then(() => {
+                showToast("HTML source copied!");
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.className = "show";
+            setTimeout(() => { toast.className = ""; }, 3000);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>
